@@ -99,7 +99,14 @@ Be specific about diseases. If unsure, provide your best assessment with lower c
     }
 
     const data = await response.json();
-    const aiResponse = data.choices[0].message.content;
+    let aiResponse = data.choices[0].message.content;
+    
+    // Remove markdown code blocks if present
+    if (aiResponse.includes('```json')) {
+      aiResponse = aiResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    } else if (aiResponse.includes('```')) {
+      aiResponse = aiResponse.replace(/```\n?/g, '').trim();
+    }
     
     // Parse the JSON response from AI
     let analysisResult;
